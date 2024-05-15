@@ -1,32 +1,35 @@
 ### Program Summary
-&emsp; &emsp; This map is developed based on Google Maps and features route planning and navigation capabilities. After navigation ends, a trip summary is displayed.
+&emsp; &emsp;This map application is developed using Google Maps as its foundation, offering robust route planning and navigation functionalities. Upon completing navigation, users are presented with a detailed trip summary.
 
 - Features:
-    + Long press to add marker, single click to remove marker.
+    + Long-press to add a marker, single-click to remove a marker.
     + Click on a business or marker to plan a route.
-    + Click on a business or marker to start real-time navigation.
+    + Click on a business or marker to initiate real-time navigation.
 
-- Run:
-Please register your application on Google Maps to obtain an API key, then configure it in your project. Configuration file.
-```Swift
-struct VMapConfig {
-    static let apiKey = "Your apikey"
-}
-```
+- To Run:
+    + Please register your application with Google Maps to obtain an API key, and then configure it within your project's settings. Refer to the configuration file provided.
+>```Swift
+>struct VMapConfig {
+>    static let apiKey = "Your apikey"
+>}
+>```
+
 <img src="./Docs/readme.gif" width="250" height="480">
 
-### Solution steps
+### Solution Steps
 
-- Carefully read and understand the requirements.
-- Preliminary work includes setting up the Google Maps Platform and reviewing the official documentation and demos provided by the platform.
-- Break down the task into implementation steps:
-    + Display the user's location information.
-    + Implement the ability to click on a business to retrieve its location and display the business name.
-    + Implement route planning.
-    + Implement navigation and exit navigation.
-    + Display a summary at the end of the navigation.
+- Thoroughly review and understand the requirements.
+- Begin by setting up the Google Maps Platform and carefully examine the official documentation and demos.
+- Break down the task into manageable implementation steps:
+    + Display the my location information.
+    + Implement the functionality to click on a business to retrieve its location and display its name.
+    + Develop route planning capabilities.
+    + Implement real-time navigation and provide options to exit navigation.
+    + Display a comprehensive summary at the conclusion of navigation.
 
-- Display the user's location information.
+### Code Snippets
+
+- To display the user's location information:
 ```Swift
 locationManager.startUpdatingLocation()
 
@@ -37,7 +40,7 @@ func locationManager(_ manager: CLLocationManager, didUpdateLocations locations:
 }
 ```
 
-- Single click to clear marker.
+- To clear a marker with a single click:
 ```Swift
 func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
     if (self.bottomView.type != .navigation) {
@@ -48,7 +51,7 @@ func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D)
 }
 ```
 
-- Long press to add marker
+- To add a marker with a long press:
 ```Swift
 func mapView(_ mapView: GMSMapView, didLongPressAt coordinate: CLLocationCoordinate2D) {
     let marker = GMSMarker(position: coordinate)
@@ -56,7 +59,7 @@ func mapView(_ mapView: GMSMapView, didLongPressAt coordinate: CLLocationCoordin
 }
 ```
 
-- Get route planning
+- To initiate route planning:
 ```Swift
 func calculateDirections() {
     let urlString = "https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&mode=driving&key=\(VMapConfig.apiKey)"
@@ -69,7 +72,8 @@ func calculateDirections() {
 }
 ```
 
-- Start real-time map navigation.
+- To begin real-time navigation:
+
 ```Swift
 func startNavigation() {
     // showRoutePath
@@ -99,12 +103,11 @@ func updateNavigation() {
 ```
 
 ### Issues Encountered
-
-- Request authorization dialog cannot be displayed, unable to obtain own location information.
+- Unable to display the authorization dialog to obtain user location information.
 - Solution: 
-  + Troubleshoot by comparing the process with the demo. 
-  +  `step1:` Check Configuration Information
-  +  `step2:` Review the Authorization Request Process in Code
+  + Troubleshoot by comparing the process with the provided demo. 
+  +  `step1:` Check Configuration Information.
+  +  `step2:` Review the Authorization Request Process in Code.
   
 ```swift
 // If the app requires foreground location permissions, it needs to configure
@@ -118,5 +121,6 @@ NSLocationUsageDescription
 NSLocationAlwaysUsageDescription
 ```
 
+### References
 - [1][Google Maps Platform](https://developers.google.com/maps/documentation/directions)
 - [2][Apple information property list](https://developer.apple.com/documentation/bundleresources/information_property_list/nslocationusagedescription)
