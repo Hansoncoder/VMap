@@ -84,6 +84,7 @@ extension VMapBottomToolView {
             self.driveIcon.isHidden = false
             self.timeLabel.text = time
         } else {
+            self.timeLabel.text = nil
             self.driveIcon.isHidden = true
         }
     }

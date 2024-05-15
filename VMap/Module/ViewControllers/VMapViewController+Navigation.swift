@@ -58,6 +58,7 @@ extension VMapViewController {
     
     func startNavigation() {
         isNavigationView = true
+        UIApplication.shared.isIdleTimerDisabled = true
         
         // showRoutePath
         if let result = result {
@@ -67,8 +68,10 @@ extension VMapViewController {
         // setup Bottom Tools
         bottomView.type = .navigation
         bottomView.showContainView()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         locationManager.startUpdatingLocation()
         locationManager.startUpdatingHeading()
+        
         // setup mapView
         showMyLocation()
         enableNavigationView()
@@ -130,6 +133,8 @@ extension VMapViewController {
         mapView.clear()
         directionsRenderer?.map = nil
         endTime = Date()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        UIApplication.shared.isIdleTimerDisabled = false
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
         showNavigationSummary()

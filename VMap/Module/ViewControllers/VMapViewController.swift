@@ -126,7 +126,7 @@ extension VMapViewController: CLLocationManagerDelegate {
         } else {
             routePath.add(location.coordinate)
             if isNavigationView {
-                mapView.camera = GMSCameraPosition(target: location.coordinate, zoom: VMapDefaultStyle.normalZoom, bearing: location.course, viewingAngle: mapView.camera.viewingAngle)
+                mapView.camera = GMSCameraPosition(target: location.coordinate, zoom: VMapDefaultStyle.navigationZoom, bearing: location.course, viewingAngle: mapView.camera.viewingAngle)
             }
         }
     }
@@ -148,6 +148,7 @@ extension VMapViewController: CLLocationManagerDelegate {
 extension VMapViewController {
     private func setupLocationManager() {
         locationManager.requestWhenInUseAuthorization()
+        locationManager.requestAlwaysAuthorization()
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.distanceFilter = 100
         locationManager.delegate = self
