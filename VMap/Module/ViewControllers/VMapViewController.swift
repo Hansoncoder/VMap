@@ -25,7 +25,6 @@ class VMapViewController: UIViewController {
     
     //  Tools
     lazy var bottomView = VMapBottomToolView()
-    lazy var zoomLevel: Float = VMapDefaultStyle.normalZoom
     
     // MARK: - data
     var isNavigationView: Bool = false
@@ -123,7 +122,7 @@ extension VMapViewController: CLLocationManagerDelegate {
         guard let location = locations.first else { return }
         if bottomView.type != .navigation {
             locationManager.stopUpdatingLocation()
-            mapView.camera = GMSCameraPosition(target: location.coordinate, zoom: VMapDefaultStyle.normalZoom, bearing: 0, viewingAngle: 0)
+            mapView.camera = GMSCameraPosition(target: location.coordinate, zoom: VMapDefaultStyle.normalZoom, bearing: location.course, viewingAngle: mapView.camera.viewingAngle)
         } else {
             routePath.add(location.coordinate)
             if isNavigationView {
@@ -136,8 +135,7 @@ extension VMapViewController: CLLocationManagerDelegate {
         if bottomView.type != .navigation {
             locationManager.stopUpdatingHeading()
         }
-        guard isNavigationView,
-              let currentLocation = manager.location?.coordinate else {
+        guard let currentLocation = manager.location?.coordinate else {
             return
         }
         

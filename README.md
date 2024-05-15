@@ -35,7 +35,7 @@ locationManager.startUpdatingLocation()
 
 func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
     guard let location = locations.first else { return }
-    mapView.camera = GMSCameraPosition(target: location.coordinate, zoom: VMapDefaultStyle.normalZoom, bearing: 0, viewingAngle: 0)
+    mapView.camera = GMSCameraPosition(target: location.coordinate, zoom: VMapDefaultStyle.normalZoom, bearing: location.course, viewingAngle: mapView.camera.viewingAngle)
     locationManager.stopUpdatingLocation()
 }
 ```
@@ -80,8 +80,10 @@ func startNavigation() {
     if let result = result {
         showRoute(result)
     }
-    
-    navigationTimer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true) {
+    locationManager.startUpdatingLocation()
+    locationManager.startUpdatingHeading()
+        
+    navigationTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) {
         calculateDirections()
         updateNavigation(result)
     }
@@ -100,6 +102,20 @@ func updateNavigation() {
     directionsRenderer?.path = path
 }
 
+func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    guard let location = locations.first else { return }
+    if isNavigationView {
+        mapView.camera = GMSCameraPosition(target: location.coordinate, zoom: VMapDefaultStyle.normalZoom, bearing: location.course, viewingAngle: mapView.camera.viewingAngle)
+    }
+}
+
+func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+    guard let currentLocation = manager.location?.coordinate else {
+        return
+    }
+    let camera = GMSCameraPosition.camera(withTarget: currentLocation, zoom: mapView.camera.zoom, bearing: newHeading.trueHeading, viewingAngle: mapView.camera.viewingAngle)
+            mapView.animate(to: camera)
+}
 ```
 
 ### Issues Encountered

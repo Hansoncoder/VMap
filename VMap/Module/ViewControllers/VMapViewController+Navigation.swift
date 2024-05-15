@@ -77,7 +77,7 @@ extension VMapViewController {
         routePath.removeAllCoordinates()
         startTime = Date()
         
-        navigationTimer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true) {
+        navigationTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) {
             timer in
             
             guard let origin = self.mapView.myLocation?.coordinate,
