@@ -95,3 +95,4 @@ iOSInjectionProject/
 /.idea
 confusion/
 R.generated.swift
+/VMap/Extension/VMapConfig.swift
