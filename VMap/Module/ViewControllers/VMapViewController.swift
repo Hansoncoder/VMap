@@ -121,8 +121,28 @@ extension VMapViewController: GMSMapViewDelegate {
 extension VMapViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.first else { return }
-        mapView.camera = GMSCameraPosition(target: location.coordinate, zoom: VMapDefaultStyle.normalZoom, bearing: 0, viewingAngle: 0)
-        locationManager.stopUpdatingLocation()
+        if bottomView.type != .navigation {
+            locationManager.stopUpdatingLocation()
+            mapView.camera = GMSCameraPosition(target: location.coordinate, zoom: VMapDefaultStyle.normalZoom, bearing: 0, viewingAngle: 0)
+        } else {
+            routePath.add(location.coordinate)
+            if isNavigationView {
+                mapView.camera = GMSCameraPosition(target: location.coordinate, zoom: VMapDefaultStyle.normalZoom, bearing: location.course, viewingAngle: mapView.camera.viewingAngle)
+            }
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        if bottomView.type != .navigation {
+            locationManager.stopUpdatingHeading()
+        }
+        guard isNavigationView,
+              let currentLocation = manager.location?.coordinate else {
+            return
+        }
+        
+        let camera = GMSCameraPosition.camera(withTarget: currentLocation, zoom: mapView.camera.zoom, bearing: newHeading.trueHeading, viewingAngle: mapView.camera.viewingAngle)
+        mapView.animate(to: camera)
     }
 }
 
@@ -134,6 +154,7 @@ extension VMapViewController {
         locationManager.distanceFilter = 100
         locationManager.delegate = self
         locationManager.startUpdatingLocation()
+        locationManager.startUpdatingHeading()
     }
     
     func setupDirectionsRenderer() {

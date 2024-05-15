@@ -67,7 +67,8 @@ extension VMapViewController {
         // setup Bottom Tools
         bottomView.type = .navigation
         bottomView.showContainView()
-        
+        locationManager.startUpdatingLocation()
+        locationManager.startUpdatingHeading()
         // setup mapView
         showMyLocation()
         enableNavigationView()
@@ -103,9 +104,6 @@ extension VMapViewController {
                     DispatchQueue.main.async {
                         self.showRoute(result)
                         self.updateNavigation(result)
-                        if let location = result.routes.first?.legs.first?.start_location {
-                            self.routePath.addLatitude(location.lat, longitude: location.lng)
-                        }
                     }
                 } catch {
                     print("Error: \(error)")
@@ -132,7 +130,8 @@ extension VMapViewController {
         mapView.clear()
         directionsRenderer?.map = nil
         endTime = Date()
-        
+        locationManager.stopUpdatingLocation()
+        locationManager.stopUpdatingHeading()
         showNavigationSummary()
     }
     
