@@ -80,6 +80,13 @@ func startNavigation() {
     if let result = result {
         showRoute(result)
     }
+    
+    // clean coordinate
+    routePath.removeAllCoordinates()
+    // record begin time
+    startTime = Date()
+    
+    // startUpdating
     locationManager.startUpdatingLocation()
     locationManager.startUpdatingHeading()
         
@@ -113,8 +120,46 @@ func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: 
     guard let currentLocation = manager.location?.coordinate else {
         return
     }
+    // Record coordinate
+    routePath.add(location.coordinate)
+    
+    // update camera
     let camera = GMSCameraPosition.camera(withTarget: currentLocation, zoom: mapView.camera.zoom, bearing: newHeading.trueHeading, viewingAngle: mapView.camera.viewingAngle)
-            mapView.animate(to: camera)
+    mapView.animate(to: camera)
+}
+```
+
+- Show navigation summary：
+
+```Swift
+func exitNavigation() {
+    // record end time
+    endTime = Date()
+    
+    // some code
+    ......
+    
+    // show summary
+    showNavigationSummary()
+    
+}
+func showNavigationSummary() {
+    guard let startTime = startTime,
+        let endTime = endTime else {
+        return
+    }
+     
+    // show time
+    let times = endTime.timeIntervalSince(startTime)
+    let minutes = Int(times) / 60
+    let seconds = Int(times) % 60
+    self.bottomView.timeLabel.text = "\(minutes)mins \(seconds)s"
+    
+    // show route path
+    let routePolyline = GMSPolyline(path: routePath)
+    routePolyline.strokeColor = .lightGray
+    routePolyline.strokeWidth = 10
+    routePolyline.map = mapView
 }
 ```
 
