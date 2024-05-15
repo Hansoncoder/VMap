@@ -13,6 +13,7 @@ struct VMapConfig {
     static let apiKey = "Your apikey"
 }
 ```
+![](Docs/readme.gif)
 
 ### Solution steps
 
