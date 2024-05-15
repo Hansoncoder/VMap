@@ -13,7 +13,7 @@ struct VMapConfig {
     static let apiKey = "Your apikey"
 }
 ```
-![](Docs/readme.gif)
+<img src="./Docs/readme.gif" width="250" height="480">
 
 ### Solution steps
 
